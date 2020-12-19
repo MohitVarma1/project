@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <!-- This is an SEO Change: added metatag for keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <nav class="menu">
+        <!-- This is a Semantic HTML Change: changed div to nav -->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="configure.html">Configure</a></li>
+            <li><a href="expense.html">Expense</a></li>
+            <li><a onclick="logout()">Logout</a></li>
+            
+            <a class="skip-to-content-link" href="#main">
+                <h2>Skip to content</h2>
+              </a>
+              <!-- This is an A11y Change: added skip to content link -->
+        </ul>
+    </nav>
+
+
+    
+    <header class="hero" aria-label="header of page">
+        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+        <!-- This is a Semantic HTML Change: changed div to header-->
+        <h1>Personal Budget</h1>
+        <h2>A personal-budget management app</h2>
+        
+    </header>
+
+    <body onload="checkJWT()">
+        <div id="logged_in" style="display: none">You are logged in</div>
+        <div id="not_logged_in" style="display: none">You are not logged in</div>
+    </body>
+
+    <body onload="checkJWT()">
+        <div id="still_logged_in" style="display: none">You have 20 seconds left</div>
+        <button onclick="twenty()">Stay Logged in</button>
+    </body>
+
+    <div class="container-fluid">
+        <h1 class="row">Configure</h1>
+        <main>
+            <div class="row">
+                <label for="budgetName">Budget Name</label>
+                <input type="text" name="budgetName" id="budgetName">
+            </div>
+            
+            <div class="row">
+                <label for="budget">Budget</label>
+                <input type="number" name="budget" id="budget">
+            </div>
+            
+            <div>
+            <button onclick="configure()">Configure</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+
+        function checkJWT() {
+            if(localStorage.getItem("jwt") != null) {
+                console.log("you are logged in");
+                document.getElementById("logged_in").style.display = "block";
+                setTimeout(function(){
+            console.log("you have 20 seconds left");
+            document.getElementById("still_logged_in").style.display = "block";
+            }, 40000); 
+
+            setTimeout(function(){
+            localStorage.removeItem('jwt')
+            window.location.href = '/';
+            }, 60000);
+            }
+            else{
+                console.log("you are not logged in");
+                document.getElementById("not_logged_in").style.display = "block";
+            }
+            
+        }
+        
+        function twenty() {
+            if(localStorage.getItem("jwt") == null){
+            }
+            else{
+            let token = localStorage.getItem('jwt');
+            axios.post('/api/twenty', null, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                if (res && res.data && res.data.success) {
+                    token = res.data.token;
+                    localStorage.setItem('jwt', token);
+                    //getDashboard();
+                    //getSettings()
+                }
+            });
+        }
+    }
+
+        function configure() {
+            if(localStorage.getItem("jwt") == null){
+            }
+            else{
+            let token = localStorage.getItem('jwt');
+            const data = {
+                budgetName: document.getElementById('budgetName').value,
+                budget: document.getElementById('budget').value,
+            };
+
+    axios.post('/api/configure', data, {
+        headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                console.log(res);
+                console.log(res.data)
+                console.log(token)
+                //document.getElementById('username').value = '';
+                document.getElementById('budgetName').value = '';
+                document.getElementById('budget').value = '';
+                //token = res.data.token
+            });
+        }
+    }
+        
+        function logout() {
+            setTimeout(function(){
+            localStorage.removeItem('jwt')
+            window.location.href = '/';
+            }, 1);  
+        }
+        
+    </script>
+
+    <footer class="bottom" aria-label="footer of page">
+        <!-- This is a Semantic HTML Change: changed div to footer -->
+        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+        <div class="center" aria-label="footer of page">
+            All rights reserved &copy; Michael Halverson
+            <a href="https://validator.w3.org/">html-validator</a>
+            <a href="https://jigsaw.w3.org/css-validator/">css-validator</a>
+        <!-- This is an SEO Change: added html and css validator to enhance performance -->
+        </div>
+    </footer>
+    
+</body>
+
+</html>

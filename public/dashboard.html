@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <!-- This is an SEO Change: added metatag for keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <nav class="menu">
+        <!-- This is a Semantic HTML Change: changed div to nav -->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="configure.html">Configure</a></li>
+            <li><a href="expense.html">Expense</a></li>
+            <li><a onclick="logout()">Logout</a></li>
+            
+            <a class="skip-to-content-link" href="#main">
+                <h2>Skip to content</h2>
+              </a>
+              <!-- This is an A11y Change: added skip to content link -->
+        </ul>
+    </nav>
+
+
+    
+    <header class="hero" aria-label="header of page">
+        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+        <!-- This is a Semantic HTML Change: changed div to header-->
+        <h1>Personal Budget</h1>
+        <h2>A personal-budget management app</h2>
+        
+    </header>
+
+    <body onload="checkJWT()">
+        <div id="logged_in" style="display: none">You are logged in</div>
+        <div id="not_logged_in" style="display: none">You are not logged in</div>
+    </body>
+
+    <body onload="checkJWT()">
+        <div id="still_logged_in" style="display: none">You have 20 seconds left</div>
+        <button onclick="twenty()">Stay Logged in</button>
+    </body>
+
+    <div class="text-box">
+        <h2>Budget Chart</h2>
+        <p>
+            <canvas id = "myChart" width="400" height="400"></canvas>
+        </p>
+    </div>
+
+    <div class="text-box">
+        <h2>Budget Spent Chart</h2>
+        <p>
+            <canvas id = "mySecondChart" width="400" height="400"></canvas>
+        </p>
+    </div>
+
+    <div class="text-box">
+        <h2>Budget Spent Chart by Month</h2>
+        <p>
+            <canvas id = "myThirdChart" width="400" height="400"></canvas>
+        </p>
+    </div>
+
+    <script>
+        var dataSource = {
+            datasets: [
+                {
+                data: [],
+                backgroundColor: [],
+                }
+            ],
+            labels: []
+        };
+
+        var dataSourceTwo = {
+            datasets: [
+                {
+                    label: 'Budget Spent',
+                    data: [],
+                    backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+                }
+            ],
+            labels: []
+        };
+
+        var dataSourceThree = {
+            datasets: [
+                {
+                    label: 'Budget Spent',
+                    data: [ 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0],
+                    backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+                }
+            ],
+            labels: ["January","February","March","April","May","June","July",
+            "August","September","October","November","December"]
+        };
+
+        function createChart() {
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: dataSource
+            });
+        }
+
+        function createChartTwo() {
+            var ctx = document.getElementById("mySecondChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'bar',
+                data: dataSourceTwo
+            });
+        }
+
+        function createChartThree() {
+            var ctx = document.getElementById("myThirdChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'line',
+                data: dataSourceThree
+            });
+        }
+
+        function checkJWT() {
+            if(localStorage.getItem("jwt") != null) {
+                console.log("you are logged in");
+                document.getElementById("logged_in").style.display = "block";
+                setTimeout(function(){
+            console.log("you have 20 seconds left");
+            document.getElementById("still_logged_in").style.display = "block";
+            }, 40000); 
+
+            setTimeout(function(){
+            localStorage.removeItem('jwt')
+            window.location.href = '/';
+            }, 60000);
+            }
+            else{
+                console.log("you are not logged in");
+                document.getElementById("not_logged_in").style.display = "block";
+            }
+            
+        }
+        
+        function twenty() {
+            if(localStorage.getItem("jwt") == null){
+            }
+            else{
+            let token = localStorage.getItem('jwt');
+            axios.post('/api/twenty', null, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                if (res && res.data && res.data.success) {
+                    token = res.data.token;
+                    localStorage.setItem('jwt', token);
+                    //getDashboard();
+                    //getSettings()
+                }
+            });
+        }
+    }
+
+        function logout() {
+            setTimeout(function(){
+            localStorage.removeItem('jwt')
+            window.location.href = '/';
+            }, 1);  
+        }
+
+        function getMongoBudget() {
+            if(localStorage.getItem("jwt") == null){
+                //break;
+            }
+            else{
+            axios.get('/api/configureData')
+            .then(function (res) {
+                console.log(res.data);
+                var user = sessionStorage.getItem("user");
+                var count=-1;
+                for(var i = 0; i < res.data.length; i++) {
+                    
+                    if(user==res.data[i].username)
+                    {
+                        count++;
+                        dataSource.labels[count]=res.data[i].budgetName;
+                    dataSource.datasets[0].data[count]=res.data[i].budget;
+                    //dataSource.datasets[0].backgroundColor[i]=res.data[i].color;
+                    dataSource.datasets[0].backgroundColor[count]='#'+(Math.random()*0xFFFFFF<<0).toString(16);
+                    }
+                }
+                //console.log(typeof dataSource);
+                var data = dataSource.datasets[0].data;
+                var labels = dataSource.labels;
+                console.log(data);
+                console.log(labels);
+                //var user = sessionStorage.getItem("user");
+                console.log(user);
+                //dataSource.data = res.data.myBudget;
+                createChart();
+                //change(dataSource.datasets.data);
+            });
+        }
+        }
+        getMongoBudget();
+        
+        function getExpenseMongoBudget() {
+            if(localStorage.getItem("jwt") == null){
+                //break;
+            }
+            else{
+            axios.get('/api/expenseData')
+            .then(function (res) {
+                console.log(res.data);
+                var user = sessionStorage.getItem("user");
+                var count=-1;
+                for(var i = 0; i < res.data.length; i++) {
+                    
+                    if(user==res.data[i].username)
+                    {
+                        count++;
+                        dataSourceTwo.labels[count]=res.data[i].budgetName;
+                    dataSourceTwo.datasets[0].data[count]=res.data[i].budgetSpent;
+                    //dataSource.datasets[0].backgroundColor[i]=res.data[i].color;
+                    }
+                }
+                //console.log(typeof dataSource);
+                var data = dataSourceTwo.datasets[0].data;
+                var labels = dataSourceTwo.labels;
+                console.log(data);
+                console.log(labels);
+                //var user = sessionStorage.getItem("user");
+                console.log(user);
+                //dataSource.data = res.data.myBudget;
+                createChartTwo();
+                //change(dataSource.datasets.data);
+            });
+        }
+        }
+        getExpenseMongoBudget();
+
+        function getMonthMongoBudget() {
+            if(localStorage.getItem("jwt") == null){
+                //break;
+            }
+            else{
+            axios.get('/api/expenseData')
+            .then(function (res) {
+                console.log(res.data);
+                var user = sessionStorage.getItem("user");
+                var count=-1;
+                for(var i = 0; i < res.data.length; i++) {
+                    
+                    if(user==res.data[i].username)
+                    {
+                        count++;
+                    //     dataSourceThree.labels[count]=res.data[i].budgetName;
+                    // dataSourceThree.datasets[0].data[count]=res.data[i].budgetSpent;
+                    // console.log(res.data[i].month);
+                    if(res.data[i].month == "January")
+                    {
+                        dataSourceThree.datasets[0].data[0] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "February")
+                    {
+                        dataSourceThree.datasets[0].data[1] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "March")
+                    {
+                        dataSourceThree.datasets[0].data[2] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "April")
+                    {
+                        dataSourceThree.datasets[0].data[3] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "May")
+                    {
+                        dataSourceThree.datasets[0].data[4] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "June")
+                    {
+                        dataSourceThree.datasets[0].data[5] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "July")
+                    {
+                        dataSourceThree.datasets[0].data[6] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "August")
+                    {
+                        dataSourceThree.datasets[0].data[7] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "September")
+                    {
+                        dataSourceThree.datasets[0].data[8] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "October")
+                    {
+                        dataSourceThree.datasets[0].data[9] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "November")
+                    {
+                        dataSourceThree.datasets[0].data[10] += res.data[i].budgetSpent;
+                    }
+                    else if(res.data[i].month == "December")
+                    {
+                        dataSourceThree.datasets[0].data[11] += res.data[i].budgetSpent;
+                    }
+
+                    }
+
+                }
+                //console.log(typeof dataSource);
+                var data = dataSourceTwo.datasets[0].data;
+                var labels = dataSourceTwo.labels;
+                console.log(data);
+                console.log(labels);
+                //var user = sessionStorage.getItem("user");
+                console.log(user);
+                //dataSource.data = res.data.myBudget;
+                createChartThree();
+                //change(dataSource.datasets.data);
+            });
+        }
+        }
+        getMonthMongoBudget();
+    </script>
+
+    <footer class="bottom" aria-label="footer of page">
+        <!-- This is a Semantic HTML Change: changed div to footer -->
+        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+        <div class="center" aria-label="footer of page">
+            All rights reserved &copy; Michael Halverson
+            <a href="https://validator.w3.org/">html-validator</a>
+            <a href="https://jigsaw.w3.org/css-validator/">css-validator</a>
+        <!-- This is an SEO Change: added html and css validator to enhance performance -->
+        </div>
+    </footer>
+    
+</body>
+
+</html>

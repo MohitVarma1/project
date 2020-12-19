@@ -1,0 +1,47 @@
+{
+  "name": "jwt",
+  "version": "1.0.0",
+  "description": "\"# NodeJS-JWT-Authentication-Test\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js",
+    "cy:open": "cypress open"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "eslintConfig": {
+    "extends": [
+      "plugin:cypress/recommended"
+    ]
+  },
+  "dependencies": {
+    "@applitools/eyes-cypress": "^3.16.3",
+    "axios": "^0.20.0",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-bearer-token": "^2.4.0",
+    "express-jwt": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.6"
+  },
+  "devDependencies": {
+    "cypress": "^6.1.0",
+    "eslint-plugin-cypress": "^2.11.2",
+    "jest": "^26.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhalver1/NodeJS-JWT-Authentication-Test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mhalver1/NodeJS-JWT-Authentication-Test/issues"
+  },
+  "homepage": "https://github.com/mhalver1/NodeJS-JWT-Authentication-Test#readme"
+}

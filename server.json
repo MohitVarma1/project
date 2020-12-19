@@ -1,0 +1,25 @@
+{"myBudget":
+    [
+        {"title":"Eat out",
+            "budget":25
+            },
+            {"title":"Rent",
+                "budget":375
+                },
+                {"title":"Hobbies",
+                    "budget":75
+                    },
+                    {"title":"College",
+                        "budget":500
+                        },
+                        {"title":"Electricity",
+                            "budget":50
+                            },
+                            {"title":"Water",
+                                "budget":50
+                                },
+                                {"title":"Grocery",
+                                    "budget":110
+                                    }
+                                ]
+                            }
