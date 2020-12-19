@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="HTML, CSS, JavaScript">
-    <!-- This is an SEO Change: added metatag for keywords -->
+  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget</title>
     <link rel="stylesheet" href="reset.css">
@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <nav class="menu">
-        <!-- This is a Semantic HTML Change: changed div to nav -->
+        
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="dashboard.html">Dashboard</a></li>
@@ -28,15 +28,14 @@
             <a class="skip-to-content-link" href="#main">
                 <h2>Skip to content</h2>
               </a>
-              <!-- This is an A11y Change: added skip to content link -->
+            
         </ul>
     </nav>
 
 
     
     <header class="hero" aria-label="header of page">
-        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
-        <!-- This is a Semantic HTML Change: changed div to header-->
+        
         <h1>Personal Budget</h1>
         <h2>A personal-budget management app</h2>
         
@@ -93,15 +92,16 @@
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(res => {
-                //document.getElementById('username').value = '';
+               
                 document.getElementById('budgetName').value = '';
                 document.getElementById('budgetSpent').value = '';
                 document.getElementById('month').value = '';
-                //token = res.data.token
+                
             });
         }
     }
 
+    
         function logout() {
             setTimeout(function(){
             localStorage.removeItem('jwt')
@@ -142,8 +142,7 @@
                 if (res && res.data && res.data.success) {
                     token = res.data.token;
                     localStorage.setItem('jwt', token);
-                    //getDashboard();
-                    //getSettings()
+                    
                 }
             });
         }
@@ -152,8 +151,7 @@
     </script>
 
     <footer class="bottom" aria-label="footer of page">
-        <!-- This is a Semantic HTML Change: changed div to footer -->
-        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+     
         <div class="center" aria-label="footer of page">
             All rights reserved &copy; 
             <!--Social Icons in Header-->
@@ -186,7 +184,6 @@
             </ul>
             <!--End of Social Icons in Header-->
           
-        <!-- This is an SEO Change: added html and css validator to enhance performance -->
         </div>
     </footer>
     

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="keywords" content="HTML, CSS, JavaScript">
-    <!-- This is an SEO Change: added metatag for keywords -->
+   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Budget</title>
     <link rel="stylesheet" href="reset.css">
@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <nav class="menu">
-        <!-- This is a Semantic HTML Change: changed div to nav -->
+       
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="dashboard.html">Dashboard</a></li>
@@ -28,15 +28,14 @@
             <a class="skip-to-content-link" href="#main">
                 <h2>Skip to content</h2>
               </a>
-              <!-- This is an A11y Change: added skip to content link -->
+             
         </ul>
     </nav>
 
 
     
     <header class="hero" aria-label="header of page">
-        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
-        <!-- This is a Semantic HTML Change: changed div to header-->
+      
         <h1>Personal Budget</h1>
         <h2>A personal-budget management app</h2>
         
@@ -62,14 +61,26 @@
     <div class="text-box">
         <h2>Budget Spent Chart</h2>
         <p>
-            <canvas id = "mySecondChart" width="400" height="400"></canvas>
+            <canvas id = "SecondChart" width="400" height="400"></canvas>
         </p>
     </div>
 
     <div class="text-box">
         <h2>Budget Spent Chart by Month</h2>
         <p>
-            <canvas id = "myThirdChart" width="400" height="400"></canvas>
+            <canvas id = "ThirdChart" width="400" height="400"></canvas>
+        </p>
+    </div>
+    <div class="text-box">
+        <h2>Budget Spent Chart by Month</h2>
+        <p>
+            <canvas id = "FourthChart" width="400" height="400"></canvas>
+        </p>
+    </div>
+    <div class="text-box">
+        <h2>Budget Spent Chart by Month</h2>
+        <p>
+            <canvas id = "FifthChart" width="400" height="400"></canvas>
         </p>
     </div>
 
@@ -107,6 +118,30 @@
             labels: ["January","February","March","April","May","June","July",
             "August","September","October","November","December"]
         };
+        var dataSourceFour = {
+            datasets: [
+                {
+                    label: 'Budget Spent',
+                    data: [ 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0],
+                    backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+                }
+            ],
+            labels: ["January","February","March","April","May","June","July",
+            "August","September","October","November","December"]
+        };
+        var dataSourceFive = {
+            datasets: [
+                {
+                    label: 'Budget Spent',
+                    data: [ 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0],
+                    backgroundColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+                }
+            ],
+            labels: ["January","February","March","April","May","June","July",
+            "August","September","October","November","December"]
+        };
 
         function createChart() {
             var ctx = document.getElementById("myChart").getContext("2d");
@@ -131,10 +166,25 @@
                 data: dataSourceThree
             });
         }
+        function createChartThree() {
+            var ctx = document.getElementById("myThirdChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: dataSourceThree
+            });
+        }
+        function createChartFive() {
+            var ctx = document.getElementById("myThirdChart").getContext("2d");
+            var myPieChart = new Chart(ctx, {
+                type: 'scatterplot',
+                data: dataSourceThree
+            });
+        }
+
 
         function checkJWT() {
             if(localStorage.getItem("jwt") != null) {
-                console.log("you are logged in");
+                console.log("Logged in");
                 document.getElementById("logged_in").style.display = "block";
                 setTimeout(function(){
             console.log("you have 20 seconds left");
@@ -147,7 +197,7 @@
             }, 60000);
             }
             else{
-                console.log("you are not logged in");
+                console.log("Not logged in");
                 document.getElementById("not_logged_in").style.display = "block";
             }
             
@@ -165,20 +215,19 @@
                 if (res && res.data && res.data.success) {
                     token = res.data.token;
                     localStorage.setItem('jwt', token);
-                    //getDashboard();
-                    //getSettings()
+                    
                 }
             });
         }
     }
-    editBudget(editBudgetTitle, editBudgetAmount, editBudgetColor) {
-    // alert("hello it is editBudget : " + editBudgetTitle);
-    (document.getElementById('id02') as HTMLElement).style.display = 'block';
-    (document.getElementById('edit-title') as HTMLInputElement).value = editBudgetTitle;
-    (document.getElementById('edit-amount') as HTMLInputElement).value = editBudgetAmount;
-    (document.getElementById('edit-color') as HTMLInputElement).value = editBudgetColor;
+//     editBudget(editBudgetTitle, editBudgetAmount, editBudgetColor) {
+//     // alert("hello it is editBudget : " + editBudgetTitle);
+//     (document.getElementById('id02') as HTMLElement).style.display = 'block';
+//     (document.getElementById('edit-title') as HTMLInputElement).value = editBudgetTitle;
+//     (document.getElementById('edit-amount') as HTMLInputElement).value = editBudgetAmount;
+//     (document.getElementById('edit-color') as HTMLInputElement).value = editBudgetColor;
 
-  }
+//   }
         function logout() {
             setTimeout(function(){
             localStorage.removeItem('jwt')
@@ -205,20 +254,18 @@
                         count++;
                         dataSource.labels[count]=res.data[i].budgetName;
                     dataSource.datasets[0].data[count]=res.data[i].budget;
-                    //dataSource.datasets[0].backgroundColor[i]=res.data[i].color;
+                  
                     dataSource.datasets[0].backgroundColor[count]='#'+(Math.random()*0xFFFFFF<<0).toString(16);
                     }
                 }
-                //console.log(typeof dataSource);
+              
                 var data = dataSource.datasets[0].data;
                 var labels = dataSource.labels;
                 console.log(data);
                 console.log(labels);
-                //var user = sessionStorage.getItem("user");
-                console.log(user);
-                //dataSource.data = res.data.myBudget;
+               
                 createChart();
-                //change(dataSource.datasets.data);
+        
             });
         }
         }
@@ -241,19 +288,16 @@
                         count++;
                         dataSourceTwo.labels[count]=res.data[i].budgetName;
                     dataSourceTwo.datasets[0].data[count]=res.data[i].budgetSpent;
-                    //dataSource.datasets[0].backgroundColor[i]=res.data[i].color;
+                   
                     }
                 }
-                //console.log(typeof dataSource);
+               
                 var data = dataSourceTwo.datasets[0].data;
                 var labels = dataSourceTwo.labels;
                 console.log(data);
                 console.log(labels);
-                //var user = sessionStorage.getItem("user");
-                console.log(user);
-                //dataSource.data = res.data.myBudget;
                 createChartTwo();
-                //change(dataSource.datasets.data);
+                
             });
         }
         }
@@ -274,9 +318,6 @@
                     if(user==res.data[i].username)
                     {
                         count++;
-                    //     dataSourceThree.labels[count]=res.data[i].budgetName;
-                    // dataSourceThree.datasets[0].data[count]=res.data[i].budgetSpent;
-                    // console.log(res.data[i].month);
                     if(res.data[i].month == "January")
                     {
                         dataSourceThree.datasets[0].data[0] += res.data[i].budgetSpent;
@@ -329,16 +370,12 @@
                     }
 
                 }
-                //console.log(typeof dataSource);
                 var data = dataSourceTwo.datasets[0].data;
                 var labels = dataSourceTwo.labels;
                 console.log(data);
                 console.log(labels);
-                //var user = sessionStorage.getItem("user");
-                console.log(user);
-                //dataSource.data = res.data.myBudget;
                 createChartThree();
-                //change(dataSource.datasets.data);
+              
             });
         }
         }
@@ -346,8 +383,7 @@
     </script>
 
     <footer class="bottom" aria-label="footer of page">
-        <!-- This is a Semantic HTML Change: changed div to footer -->
-        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+       
         <div class="center" aria-label="footer of page">
             All rights reserved &copy; 
 
@@ -381,8 +417,7 @@
                 </ul>
                 <!--End of Social Icons in Header-->
               
-        <!-- This is an SEO Change: added html and css validator to enhance performance -->
-        </div>
+        
     </footer>
     
 </body>
