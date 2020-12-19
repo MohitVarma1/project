@@ -23,7 +23,7 @@ app.use('/', express.static('public'));
 app.use(compression());
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://165.227.82.127/');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Headers', 'Content-type,Authorization');
     next();
 });
@@ -32,7 +32,7 @@ let url = 'mongodb://localhost:27017/mongodb_project';
 
 const PORT = 3001;
 
-const secretKey = 'My super secret key';
+const secretKey = 'My secret key';
 const jwtMW = exjwt({
     secret: secretKey,
     algorithms: ['HS256']
@@ -40,24 +40,19 @@ const jwtMW = exjwt({
 
 
 app.post('/api/login', (req, res) => {
-
-    //const { username, password } = req.body;
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(()=>{
        console.log("Connected to db");
         namesModel.find()
                .then((data)=>{
                    console.log(data)
-                   //namesModel.find({username});
-                //    res.json(data);
-                //    res.send(data);
+                
                    const { username, password } = req.body;
-                   //users=data;
+           
                    for (let user of data) {
                     if (username == user.username && password == user.password) {
                         if(username == user.username && password == user.password) {
                             let token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1m'});
-                        // id: user.id, 
                         res.json({
                             success: true,
                             err: null,
@@ -69,7 +64,7 @@ app.post('/api/login', (req, res) => {
                             res.status(401).json({
                                 success: false,
                                 token: null,
-                                err: 'Username or password is incorrect'
+                                err: 'Uh Oh! you have entered wrong credentials'
                             });
                         }
                     }
@@ -83,16 +78,24 @@ app.post('/api/login', (req, res) => {
                    console.log(connectionError)
                })
     })
-    // get-budget 
-    // post-budget
-    
+   
     .catch((connectionError)=>{
        console.log(connectionError)
     })
 
 });
+// public checkCredentials(user_val, pass_val) {
+//     console.log('check credentials inside service');
+//     return axios.get('http://104.131.167.38:3000/api/v1/login', {
+//       auth: {
+//         username: user_val,
+//         password: pass_val
+//       }
+//     });
+//   }
+// 
 
-app.post('/api/twenty', (req, res) => {
+app.post('/api/Logout', (req, res) => {
     console.log(req.headers.authorization);
     const authHeader = req.headers.authorization;
     if (authHeader){
@@ -104,7 +107,6 @@ app.post('/api/twenty', (req, res) => {
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
     
     let token = jwt.sign({ username: decoded.username }, secretKey, { expiresIn: '1m'});
-                        // id: user.id, 
                         res.json({
                             success: true,
                             err: null,
@@ -240,7 +242,6 @@ app.post('/api/configure', (req, res) => {
     .then((data)=>{
         console.log(data)
         res.send(data)
-        //window.location.href = 'http://localhost:3000/';
         mongoose.connection.close();
     })
     .catch((connectionError)=>{
@@ -255,17 +256,12 @@ app.post('/api/configure', (req, res) => {
 });
 
 app.post('/api/expense', (req, res) => {
-    // extract the token from the header 
-    // token verification jwt.verify() (Decode)
-    // extract the username from the verified token 
     console.log(req.headers.authorization);
     const authHeader = req.headers.authorization;
     if (authHeader){
         const token = authHeader.split(' ')[1];
         jwt.verify(token, secretKey, (err, data)=>{
             if (err){res.send(err)}
-            //connect to the database 
-            // perform 
             const decoded = jwt.verify(token, secretKey);
             console.log(decoded.username);
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -280,7 +276,6 @@ app.post('/api/expense', (req, res) => {
     .then((data)=>{
         console.log(data)
         res.send(data)
-        //window.location.href = 'http://localhost:3000/';
         mongoose.connection.close();
     })
     .catch((connectionError)=>{
@@ -297,14 +292,14 @@ app.post('/api/expense', (req, res) => {
 app.get('/api/settings', jwtMW, (req, res) => {
     res.json({
         success: true,
-        myContent: 'Secret content that only logged in people can see.'
+        myContent: 'Data available for Logged in user.'
     });
 });
 
 app.get('/api/dashboard', jwtMW, (req, res) => {
     res.json({
         success: true,
-        myContent: 'Secret content that only logged in people can see.'
+        myContent: 'Data available for Logged in user.'
     });
     console.log(jwtMW);
 });
@@ -312,7 +307,7 @@ app.get('/api/dashboard', jwtMW, (req, res) => {
 app.get('/api/prices', jwtMW, (req, res) => {
     res.json({
         success: true,
-        myContent: 'This is the price $3.99.'
+        myContent: 'Subscribe for $49.'
     });
 });
 
@@ -325,7 +320,7 @@ app.get('/', (req, res) => {
           res.status(401).json({
               success: false,
               officialError: err,
-              err: 'Username or password is incorrect 2'
+              err: 'Incorrect Credentials'
           });
       }
       else {

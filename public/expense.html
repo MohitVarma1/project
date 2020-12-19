@@ -49,7 +49,7 @@
 
     <body onload="checkJWT()">
         <div id="still_logged_in" style="display: none">You have 20 seconds left</div>
-        <button onclick="twenty()">Stay Logged in</button>
+        <button onclick="logout()">Stay Logged in</button>
     </body>
 
 
@@ -130,12 +130,12 @@
             
         }
         
-        function twenty() {
+        function logout() {
             if(localStorage.getItem("jwt") == null){
             }
             else{
             let token = localStorage.getItem('jwt');
-            axios.post('/api/twenty', null, {
+            axios.post('/api/logout', null, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(res => {
@@ -155,9 +155,37 @@
         <!-- This is a Semantic HTML Change: changed div to footer -->
         <!-- This is an A11y Change: added aria-label to describe purpose of class -->
         <div class="center" aria-label="footer of page">
-            All rights reserved &copy; Michael Halverson
-            <a href="https://validator.w3.org/">html-validator</a>
-            <a href="https://jigsaw.w3.org/css-validator/">css-validator</a>
+            All rights reserved &copy; 
+            <!--Social Icons in Header-->
+            <ul class="social-icons">
+                <li>
+                    <a target="_blank" title="Facebook" href="https://www.facebook.com/username">
+                        <i class="fa fa-facebook fa-1x"></i><span>Facebook</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="Google+" href="http://google.com/+username">
+                        <i class="fa fa-google-plus fa-1x"></i><span>Google+</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="Twitter" href="http://www.twitter.com/username">
+                        <i class="fa fa-twitter fa-1x"></i><span>Twitter</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="Instagram" href="http://www.instagram.com/username">
+                        <i class="fa fa-instagram fa-1x"></i><span>Instagram</span>
+                    </a>
+                </li>
+                <li>
+                    <a target="_blank" title="behance" href="http://www.behance.net">
+                        <i class="fa fa-behance fa-1x"></i><span>Behance</span>
+                    </a>
+                </li>
+            </ul>
+            <!--End of Social Icons in Header-->
+          
         <!-- This is an SEO Change: added html and css validator to enhance performance -->
         </div>
     </footer>

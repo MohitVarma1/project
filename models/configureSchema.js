@@ -10,6 +10,7 @@ const configureSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
+        uppercase: true
     },
     budget: {
         type: Number,
