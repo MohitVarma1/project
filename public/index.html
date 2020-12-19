@@ -59,7 +59,7 @@
             <a class="skip-to-content-link" href="#main">
                 <h2>Skip to content</h2>
               </a>
-              <!-- This is an A11y Change: added skip to content link -->
+            
         </ul>
     </nav>
 
@@ -302,13 +302,27 @@
                 if (res && res.data && res.data.success) {
                     const token = res.data.token;
                     localStorage.setItem('jwt', token);
-                    window.location.href = '/';
-                    //getDashboard();
-                    //getSettings()
+                    window.location.href = '/';}
+            });
+        }
+ 
+        function logout() {
+            if(localStorage.getItem("jwt") == null){
+            }
+            else{
+            let token = localStorage.getItem('jwt');
+            axios.post('/api/logout', null, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(res => {
+                if (res && res.data && res.data.success) {
+                    token = res.data.token;
+                    localStorage.setItem('jwt', token);
+              
                 }
             });
         }
-
+    }
         function signup() {
             const data = {
                 username: document.getElementById('username2').value,
@@ -349,30 +363,11 @@
             }
             
         }
-        
-        function logout() {
-            if(localStorage.getItem("jwt") == null){
-            }
-            else{
-            let token = localStorage.getItem('jwt');
-            axios.post('/api/logout', null, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(res => {
-                if (res && res.data && res.data.success) {
-                    token = res.data.token;
-                    localStorage.setItem('jwt', token);
-                    //getDashboard();
-                    //getSettings()
-                }
-            });
-        }
-    }
+       
     </script>
 
     <footer class="bottom" aria-label="footer of page">
-        <!-- This is a Semantic HTML Change: changed div to footer -->
-        <!-- This is an A11y Change: added aria-label to describe purpose of class -->
+       
         <div class="center" aria-label="footer of page">
             All rights reserved &copy; SS
             
